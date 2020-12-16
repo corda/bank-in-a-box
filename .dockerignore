@@ -1,0 +1,10 @@
+# Ignore everything
+**
+
+# Allow files and directories
+!/docker/Dockerfile
+!/workflows/build/libs/**
+!/contracts/build/libs/**
+!/credit-rating-oracle/build/libs/**
+!/webservices/build/libs/**
+!/clients/build/libs/**

@@ -1,0 +1,18 @@
+# config defines the options that relate to the deployment but not specifically to the Web Server
+config:
+  # resourceName defines the Kubernetes resource Name that all resources will share (with some added extensions to differentiate the different resources)
+  # Does not need editing unless deploying multiple nodes in the same cluster which should use unique resource names
+  resourceName: "front-end"
+  # dockerImage to be used for web api server deployment
+  dockerImage: "front-end:0.0.1"
+
+webServer:
+  conf:
+    port: 3003
+    apihost: localhost:7777/
+    monthdays: 31
+    clientid: bank_in_a_box_app
+    clientSecret: password1!
+    promiseTrackerDelay: 500
+    httpRequestTimeout: 10000
+    recurringPaymentPeriod: P{period}D

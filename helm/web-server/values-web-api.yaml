@@ -1,0 +1,31 @@
+# config defines the options that relate to the deployment but not specifically to the Web Server
+config:
+  # resourceName defines the Kubernetes resource Name that all resources will share (with some added extensions to differentiate the different resources)
+  # Does not need editing unless deploying multiple nodes in the same cluster which should use unique resource names
+  resourceName: "web-api-server"
+  # dockerImage to be used for web api server deployment
+  dockerImage: "web-api-server:0.0.1"
+# webServer defines the options that relate to Web Server / Spring configuration
+webServer:
+  conf:
+    port: 7777
+    profiles: "prod,h2"
+    corsAllowedOrigins: "*"
+    keyStorePath: "jwt.jks"
+    keyStorePassword: "changeit!"
+    keyStoreAlias: "r3.com"
+# data source configuration
+datasource:
+  conf:
+    driverClassName: "org.h2.Driver"
+    url: "jdbc:h2:mem:testdb"
+    password: "password"
+    username: "sa"
+# corda node connection configuration
+corda:
+  conf:
+    rpc:
+      username: "user1"
+      password: "test"
+      host: "corda-bank-service"
+      port: 30000

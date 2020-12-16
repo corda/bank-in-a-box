@@ -1,0 +1,3 @@
+description: Corda Bank in a box deployment chart for frontend
+name: corda-frontend
+version: 0.0.1

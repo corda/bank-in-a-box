@@ -1,0 +1,3 @@
+description: Corda Bank in a box deployment chart
+name: corda
+version: 0.0.1

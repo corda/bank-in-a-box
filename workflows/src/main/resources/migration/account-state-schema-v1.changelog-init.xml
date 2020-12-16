@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd" >
+    <changeSet author="R3.Corda" id="create_account_state_schema">
+        <createTable tableName="account_schema">
+            <column name="transaction_id" type="NVARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="output_index" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_info" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="balance" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tx_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="NVARCHAR(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="NVARCHAR(40)">
+                <constraints nullable="false" foreignKeyName="fk_account_schema_reference_customer_id" references="customer(customer_id)"/>
+            </column>
+            <column name="linear_id" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="withdrawal_daily_limit" type="BIGINT" />
+            <column name="transfer_daily_limit" type="BIGINT" />
+            <column name="overdraft_balance" type="BIGINT" />
+            <column name="overdraft_limit" type="BIGINT" />
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_account_state_pk">
+        <addPrimaryKey columnNames="transaction_id,output_index" constraintName="account_schema_pk" tableName="account_schema"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_account_state_account_info_idx">
+        <createIndex indexName="account_state_account_info_idx" tableName="account_schema">
+            <column name="account_info"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_account_state_linear_id_idx">
+        <createIndex indexName="account_state_linear_id_idx" tableName="account_schema">
+            <column name="linear_id"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_account_state_customer_id_idx">
+        <createIndex indexName="account_state_customer_id_idx" tableName="account_schema">
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,49 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd" >
+    <changeSet author="R3.Corda"  id="insert-roles">
+        <insert tableName="role">
+            <column name="id" value="1"/>
+            <column name="name" value="ADMIN"/>
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="2"/>
+            <column name="name" value="CUSTOMER"/>
+        </insert>
+        <insert tableName="role">
+            <column name="id" value="3"/>
+            <column name="name" value="GUEST"/>
+        </insert>
+    </changeSet>
+    <changeSet author="R3.Corda"  id="insert-admin">
+        <insert tableName="user">
+            <column name="username" value="admin"/>
+            <column name="email" value="admin@r3.com"/>
+            <column name="password" value="$2a$10$wXPmSDNlMonzzrsa.klmzeNNeX7VheeYig8802Q8pai4pLGl8.IwW"/>
+            <column name="enabled" value="TRUE"/>
+            <column name="account_locked" value="FALSE"/>
+            <column name="account_expired" value="FALSE"/>
+            <column name="credentials_expired" value="FALSE"/>
+        </insert>
+    </changeSet>
+    <changeSet author="R3.Corda"  id="insert-admin-role-admin">
+        <insert tableName="role_user">
+            <column name="user_id" value="admin"/>
+            <column name="role_id" value="1"/>
+        </insert>
+    </changeSet>
+    <changeSet author="R3.Corda"  id="insert-ouath-client-details">
+        <insert tableName="oauth_client_details">
+            <column name="client_id" value="bank_in_a_box_app"/>
+            <column name="client_secret" value="$2a$10$wXPmSDNlMonzzrsa.klmzeNNeX7VheeYig8802Q8pai4pLGl8.IwW"/>
+            <column name="resource_ids" value="USER_CLIENT_RESOURCE,USER_ADMIN_RESOURCE"/>
+            <column name="scope" value="read,write"/>
+            <column name="authorized_grant_types" value="authorization_code,password,refresh_token,implicit"/>
+            <column name="web_server_redirect_uri" value="NULL"/>
+            <column name="authorities" value="NULL"/>
+            <column name="access_token_validity" value="900"/>
+            <column name="refresh_token_validity" value="3600"/>
+            <column name="additional_information" value="{}"/>
+            <column name="autoapprove" value="NULL"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

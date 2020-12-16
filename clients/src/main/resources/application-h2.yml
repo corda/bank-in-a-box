@@ -1,0 +1,7 @@
+# in memory H2 configuration for auth-server DB, activated by the spring profile h2
+spring:
+  datasource:
+    driverClassName: ${JDBC_DRIVER_NAME}
+    url: ${JDBC_URL}
+    password: ${JDBC_PASSWORD}
+    username: ${JDBC_USER}

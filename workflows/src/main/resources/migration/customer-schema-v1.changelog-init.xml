@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd" >
+    <changeSet author="R3.Corda" id="create_customer_schema">
+        <createTable tableName="customer">
+            <column name="customer_id" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="modified_on" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_name" type="NVARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="contact_number" type="NVARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="postcode" type="NVARCHAR(12)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_customer_pk">
+        <addPrimaryKey columnNames="customer_id" constraintName="customer_pk" tableName="customer"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_attachment_reference_schema">
+        <createTable tableName="attachment_reference">
+            <column name="attachment_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="attachment_hash" type="NVARCHAR(70)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="attachment_name" type="NVARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="NVARCHAR(40)">
+                <constraints nullable="false" foreignKeyName="fk_attachment_reference_customer_id" references="customer(customer_id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_attachment_reference_pk">
+        <addPrimaryKey columnNames="attachment_id" constraintName="attachment_reference_pk" tableName="attachment_reference"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_attachment_reference_fk_idx">
+        <createIndex indexName="customer_id_fk_idx" tableName="attachment_reference">
+            <column name="customer_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.resourceName }}-corda-configmap
+data:
+  node.conf: |+
+{{- $typePath := .Values.config.resourceType }}
+{{- $filename := printf "files/%s/node.conf" $typePath }}
+{{- $file := .Files.Get $filename }}
+{{- if $file }}
+{{ tpl ($file) . | indent 4 }}
+{{- else }}
+{{ printf "ERROR: File not found %s, this probably means you are targetting a version of Corda that does not have an assigned node-<version>.conf file, you can in most cases just copy another version (the closest version you can find, eg for 4.4, choose 4.3, for 4.4.2, choose 4.4) of the node.conf file and name it accordingly." $filename }}
+{{- end }}
+  bank-in-a-box-workflows-0.1.conf: |
+    refapp_notary="{{ .Values.bankInABox.conf.refappNotary }}"
+    oracle_party="{{ .Values.bankInABox.conf.oracleParty }}"
+    credit_rating_validity_duration_hours={{ .Values.bankInABox.conf.creditRatingValidityDurationHours }}
+    credit_rating_host_port="{{ .Values.bankInABox.conf.creditRatingHostPort }}"
+    credit_rating_threshold={{ .Values.bankInABox.conf.creditRatingThreshold }}
+    loan_repayment_period={{ .Values.bankInABox.conf.loanRepaymentPeriod }}
+
+binaryData:
+  network-parameters.file:
+{{ .Files.Get (printf "files/%s/network-parameters.file" .Values.config.resourceType) | b64enc | quote | indent 4 }}
+  nodekeystore.jks:
+{{ .Files.Get (printf "files/%s/certificates/nodekeystore.jks" .Values.config.resourceType) | b64enc | quote | indent 4 }}
+  sslkeystore.jks:
+{{ .Files.Get (printf "files/%s/certificates/sslkeystore.jks" .Values.config.resourceType) | b64enc | quote | indent 4 }}
+  truststore.jks:
+{{ .Files.Get (printf "files/%s/certificates/truststore.jks" .Values.config.resourceType) | b64enc | quote | indent 4 }}
+  nodeInfo-6C9ECE03C7536A792EBC552904E91F8540F4C6ECCF7C1FB63821A8F30F68FAF1.file:
+{{ .Files.Get "files/nodeInfo-6C9ECE03C7536A792EBC552904E91F8540F4C6ECCF7C1FB63821A8F30F68FAF1.file" | b64enc | quote | indent 4 }}
+  nodeInfo-5D9023BC20666D632B1382B53A3AFF7874B1F14870BC841BFB2C70397665D126.file:
+{{ .Files.Get "files/nodeInfo-5D9023BC20666D632B1382B53A3AFF7874B1F14870BC841BFB2C70397665D126.file" | b64enc | quote | indent 4 }}
+  nodeInfo-8C3609861758F97F079E34D1723E1B0C08FEB81FD0B1051407875172A04CE0BA.file:
+{{ .Files.Get "files/nodeInfo-8C3609861758F97F079E34D1723E1B0C08FEB81FD0B1051407875172A04CE0BA.file" | b64enc | quote | indent 4 }}

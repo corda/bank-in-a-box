@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.config.resourceName }}-frontend-configmap
+data:
+  config.js: |
+    window.PORT = {{ .Values.webServer.conf.port | quote }};
+    window.REACT_APP_APIHOST = {{ .Values.webServer.conf.apihost | quote }};
+    window.REACT_APP_MONTH_OFFSET = {{ .Values.webServer.conf.monthdays | quote }};
+    window.REACT_APP_CLIENTID = {{ .Values.webServer.conf.clientid | quote }};
+    window.REACT_APP_CLIENT_SECRET = {{ .Values.webServer.conf.clientSecret | quote }};
+    window.REACT_APP_PROMISE_TRACKER_DELAY = {{ .Values.webServer.conf.promiseTrackerDelay | quote }};
+    window.REACT_APP_HTTP_REQUEST_TIMEOUT = {{ .Values.webServer.conf.httpRequestTimeout | quote }};
+    window.RECURRINGPAYMENTPERIOD = {{ .Values.webServer.conf.recurringPaymentPeriod | quote }};

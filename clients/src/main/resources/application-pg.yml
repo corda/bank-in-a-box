@@ -1,0 +1,20 @@
+# postgres DB configuration for auth-server DB, activated by the spring profile pg
+spring:
+  datasource:
+    driverClassName: ${JDBC_DRIVER_NAME}
+    url: ${JDBC_URL}
+    password: ${JDBC_PASSWORD}
+    username: ${JDBC_USER}
+    tomcat:
+      test-while-idle: true
+      validation-query: SELECT 1
+    initialization-mode: never
+    platform: postgres
+    jpa:
+      properties:
+        hibernate:
+          dialect: org.hibernate.dialect.PostgreSQLDialect
+      hibernate:
+        naming:
+          physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
+        ddl-auto: validate

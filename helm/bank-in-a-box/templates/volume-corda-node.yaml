@@ -1,0 +1,62 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.resourceName }}-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: {{ .Values.config.storage.storageClassName }}
+  volumeName: {{ .Values.config.resourceName }}-pv-volume
+  resources:
+    requests:
+      storage: {{ .Values.config.storage.node.size }}
+---
+kind: PersistentVolume
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.resourceName }}-pv-volume
+spec:
+  capacity:
+    storage: {{ .Values.config.storage.node.size }}
+  accessModes:
+    - ReadWriteOnce
+{{- if .Values.config.storage.azureFile.enabled }}
+  azureFile:
+    secretName: {{ .Values.config.storage.resourceName }}-secret
+    shareName: {{ .Values.config.storage.node.fileShareName }}
+    readOnly: false
+  mountOptions:
+  - dir_mode=0777
+  - file_mode=0777
+  - uid=1000
+  - gid=1000
+{{- else if .Values.config.storage.gcpPD.enabled }}
+  gcePersistentDisk:
+    pdName: "{{ .Values.config.storage.node.volumeId }}"
+    fsType: "{{ .Values.config.storage.gcpPD.fsType }}"
+{{- else if .Values.config.storage.awsEBS.enabled }}
+  awsElasticBlockStore:
+    volumeID: "{{ .Values.config.storage.node.volumeId }}"
+    fsType: "{{ .Values.config.storage.awsEBS.fsType }}"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - {{ .Values.config.storage.node.volumeHost }}
+{{- else if .Values.config.storage.local.enabled }}
+  volumeMode: Filesystem
+  storageClassName: local-storage
+  local:
+    path: /tmp
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - {{ .Values.config.storage.node.volumeHost }}
+{{- end }}

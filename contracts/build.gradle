@@ -1,0 +1,35 @@
+apply plugin: 'net.corda.plugins.cordapp'
+
+jar.archiveBaseName = "bank-in-a-box-contracts"
+
+cordapp {
+    targetPlatformVersion corda_platform_version
+    minimumPlatformVersion corda_platform_version
+    contract {
+        name "Refapp CorDapp"
+        vendor "Corda Open Source"
+        licence "Apache License, Version 2.0"
+        versionId 1
+    }
+    signing {
+        enabled true
+        options {
+            keystore "../cert/signerStore.p12"
+            alias "cordapp-signer"
+            storepass "secret1!"
+            keypass "secret1!"
+            storetype "PKCS12"
+        }
+    }
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    compileOnly "com.esotericsoftware:kryo:4.0.2"
+
+    // Corda dependencies.
+    cordaCompile "$corda_core_release_group:corda-core:$corda_core_release_version"
+    cordapp "$accounts_release_group:accounts-contracts:$accounts_release_version"
+
+    testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
+}

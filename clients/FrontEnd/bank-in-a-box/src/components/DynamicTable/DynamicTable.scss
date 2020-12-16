@@ -1,0 +1,292 @@
+@import '../../styles/common.scss';
+.sortButton {
+    float: right;
+    margin-right: 10px;
+    color: $clickable-purple;
+    box-shadow: $common-shadow-light;
+}
+
+.paginationComponent {
+    display: flex;
+    flex-flow: wrap;
+    margin: auto;
+    margin-bottom: 10px;
+
+    .input {
+        margin: auto;
+    }
+}
+
+.tableWrapper {
+    //wraps the table only without paginaton
+    margin-bottom: 20px;
+    min-height: 720px;
+}
+
+.pagination {
+    display: flex;
+    flex-flow: wrap;
+    max-width: 550px;
+    margin: auto;
+    margin-bottom: 30px;
+
+    .bg-deep-blue {
+        background-color: $dark;
+        color: 'white';
+    }
+}
+.sortBySelectWrapper {
+    display: block;
+    @media only screen and (min-width: 1000px) {
+        display: none;
+    }
+}
+
+.dynamicTable {
+    $baseTable: &;
+    border-collapse: separate;
+    border-spacing: 1px;
+    width: 100%;
+    table-layout: fixed;
+
+    td,
+    th {
+        border: 1px groove #3842753b;
+        padding-left: 10px;
+        padding-right: 10px;
+        text-align: left;
+        word-wrap: break-word;
+        overflow: auto;
+        height: 60px;
+        @media only screen and (min-width: 768px) {
+            min-width: 120px;
+        }
+    }
+
+    tbody {
+        tr:hover,
+        tr:focus {
+            background-color: $highlight;
+            color: $dark;
+            cursor: pointer;
+        }
+    }
+
+    thead {
+        tr {
+            background-color: $charcoal;
+            color: white;
+        }
+
+        th:hover,
+        th:focus {
+            background-color: $highlight;
+            cursor: pointer;
+        }
+    }
+
+    tr:nth-child(even) {
+        background-color: $light;
+    }
+
+    tr:first-child th:first-child {
+        border-top-left-radius: $common-radius;
+    }
+
+    tr:first-child th:last-child {
+        border-top-right-radius: $common-radius;
+    }
+
+    tr:last-child td:last-child {
+        border-bottom-right-radius: $common-radius;
+    }
+
+    tr:last-child td:first-child {
+        border-bottom-left-radius: $common-radius;
+    }
+
+    &--customersTable,
+    &--accountsTable,
+    &--transactionsTable,
+    &--recurringPaymentsTable,
+    &--userTable {
+        @extend #{$baseTable};
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    /* Force table to not be like tables anymore */
+    .dynamicTable {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+        }
+
+        /* Hide table headers */
+        thead tr {
+            position: absolute;
+            top: -9999px;
+            left: -9999px;
+        }
+        tr {
+            border: 1px solid #ccc;
+        }
+
+        /* Behave like a row */
+        td {
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 35%;
+            overflow: auto;
+            overflow-wrap: anywhere;
+        }
+
+        //Override tavble style which was causing a styling issue
+        td:first-of-type {
+            border: none;
+            border-bottom: 1px solid #eee;
+            position: relative;
+            padding-left: 35%;
+            overflow: auto;
+            overflow-wrap: anywhere;
+        }
+
+        //Mimic table headers
+        td:before {
+            position: absolute;
+
+            left: 6px;
+            width: 45%;
+            padding-right: 10px;
+            white-space: nowrap;
+        }
+
+        &--customersTable {
+            td:nth-of-type(1):before {
+                content: 'Customer Name';
+            }
+            td:nth-of-type(2):before {
+                content: 'Contact Number';
+            }
+            td:nth-of-type(3):before {
+                content: 'Email';
+            }
+            td:nth-of-type(4):before {
+                content: 'Contact Number';
+            }
+        }
+
+        &--accountsTable {
+            td:nth-of-type(1):before {
+                content: 'Account Key';
+            }
+            td:nth-of-type(2):before {
+                content: 'Customer Name';
+            }
+            td:nth-of-type(3):before {
+                content: 'Type';
+            }
+            td:nth-of-type(4):before {
+                content: 'Currency';
+            }
+            td:nth-of-type(5):before {
+                content: 'Balance';
+            }
+            td:nth-of-type(6):before {
+                content: 'Status';
+            }
+            td:nth-of-type(7):before {
+                content: 'Last Tx Date';
+            }
+        }
+
+        &--transactionsTable {
+            td:nth-of-type(1):before {
+                content: 'Transaction ID';
+            }
+            td:nth-of-type(2):before {
+                content: 'Account From';
+            }
+            td:nth-of-type(3):before {
+                content: 'Account To';
+            }
+            td:nth-of-type(4):before {
+                content: 'Amount';
+            }
+            td:nth-of-type(5):before {
+                content: 'Type';
+            }
+            td:nth-of-type(6):before {
+                content: 'Tx Date';
+            }
+        }
+
+        &--recurringPaymentsTable {
+            td:nth-of-type(1):before {
+                content: 'Period';
+            }
+            td:nth-of-type(2):before {
+                content: 'Account From';
+            }
+            td:nth-of-type(3):before {
+                content: 'Account To';
+            }
+            td:nth-of-type(4):before {
+                content: 'Amount';
+            }
+            td:nth-of-type(5):before {
+                content: 'Iterations Left';
+            }
+            td:nth-of-type(6):before {
+                content: 'Payment';
+            }
+        }
+
+        &--userTable {
+            td:nth-of-type(1):before {
+                content: 'User Name';
+            }
+            td:nth-of-type(2):before {
+                content: 'Email';
+            }
+            td:nth-of-type(3):before {
+                content: 'User Roles';
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1100px) {
+    .dynamicTable {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+            margin-top: 10px;
+            font-size: 15px;
+        }
+    }
+}
+
+@media only screen and (max-width: 360px) {
+    .dynamicTable {
+        table,
+        thead,
+        tbody,
+        th,
+        td,
+        tr {
+            display: block;
+            margin-top: 10px;
+            font-size: 12px;
+        }
+    }
+}

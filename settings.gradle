@@ -1,0 +1,9 @@
+rootProject.name = 'refapp'
+include 'workflows'
+include 'contracts'
+include 'clients'
+include 'webservices'
+include 'credit-rating-oracle'
+
+include 'freighter-tests'
+

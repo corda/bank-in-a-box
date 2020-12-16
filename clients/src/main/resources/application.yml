@@ -1,0 +1,43 @@
+server:
+  port: ${WEB_SERVER_PORT}
+
+spring:
+  profiles:
+    active: ${SPRING_ACTIVE_PROFILES} # set to noauth for no authentication, set to h2 for in memory auth provider db
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.xml
+
+config:
+  rpc:
+    username: ${RPC_USER}
+    password: ${RPC_PASSWORD}
+    host: ${RPC_HOST}
+    port: ${RPC_PORT}
+
+auth:
+  server:
+    check-user-scopes: false
+    # CORS configuration
+    cors:
+      allowed-endpoints: /**
+      allowed-origins: ${CORS_ALLOWED_ORIGINS}
+      allowed-methods: GET,POST,PUT,OPTIONS
+      allowed-headers: authorization
+    # credentials for provided jwt.jks, do not user in production, generate new key store and configure new values
+    key-store-path: ${KEY_STORE_PATH}
+    key-store-pass: ${KEY_STORE_PASSWORD}
+    key-store-alias: ${KEY_STORE_ALIAS}
+    # spring security mvc matcher configurable paths for various endpoints
+    websocket-paths: /ws
+    guest-paths: /register/guest*
+    admin-paths: /register/admin/addRole*,/register/admin/revokeRole*,/register/admin/users*,/accounts/create*,/accounts/approve-overdraft-account*,/accounts/issue-loan*,/accounts/set-status*,/accounts*,/customers/**,/recurring-payments/**,/transactions/**,/payments/withdraw-fiat*,/payments/deposit-fiat*
+    customer-admin-paths: /customers/name/{accountId}
+    customer-only-paths: /payments/intrabank-payment*
+    authenticated-paths: /oauth/**
+    customer-update-paths: /customers/update/{customerId}*
+    customer-matched-paths: /customers/{customerId},/recurring-payments/customer/{customerId}*,/transactions/customer/{customerId}*,/accounts/customer/{customerId}*
+    account-matched-paths: /accounts/{accountId},/recurring-payments/account/{accountId},/transactions/account/{accountId}*
+    account-request-param-matched-paths: /accounts/set-limits*,/payments/create-recurring-payment*
+    recurring-payment-id-matched-paths: /payments/cancel-recurring-payment*
+    recurring-payment-id-path-matched-paths: /recurring-payments/{recurringPaymentId}*
+    transaction-id-matched-paths: /transactions/{transactionId}

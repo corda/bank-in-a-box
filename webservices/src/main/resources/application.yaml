@@ -1,0 +1,2 @@
+server:
+  port: ${WEB_SERVER_PORT}

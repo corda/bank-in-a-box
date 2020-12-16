@@ -1,0 +1,34 @@
+# config defines the options that relate to the deployment but not specifically to the Web Server
+config:
+  # resourceName defines the Kubernetes resource Name that all resources will share (with some added extensions to differentiate the different resources)
+  # Does not need editing unless deploying multiple nodes in the same cluster which should use unique resource names
+  resourceName: "credit-rating-server"
+  # dockerImage to be used for credit rating server deployment
+  dockerImage: "credit-rating-server:0.0.1"
+
+# webServer defines the options that relate to Web Server / Spring configuration
+webServer:
+  conf:
+    port: 8090
+    profiles: default
+    corsAllowedOrigins: ""
+    keyStorePath: ""
+    keyStorePassword: ""
+    keyStoreAlias: ""
+
+# data source configuration
+datasource:
+  conf:
+    driverClassName: ""
+    url: ""
+    password: ""
+    username: ""
+
+# corda node connection configuration
+corda:
+  conf:
+    rpc:
+      username: ""
+      password: ""
+      host: ""
+      port: ""

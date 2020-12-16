@@ -1,0 +1,103 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd" >
+    <changeSet author="R3.Corda" id="create_oauth_client_details">
+        <createTable tableName="oauth_client_details">
+            <column name="client_id" type="NVARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="client_secret" type="NVARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="resource_ids" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="scope" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="authorized_grant_types" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="web_server_redirect_uri" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="authorities" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="access_token_validity" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="refresh_token_validity" type="BIGINT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="additional_information" type="NVARCHAR(4096)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="autoapprove" type="NVARCHAR(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_ouath_client_details_pk">
+        <addPrimaryKey columnNames="client_id" constraintName="ouath_client_details_pk" tableName="oauth_client_details"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_user_schema">
+        <createTable tableName="user">
+            <column name="username" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="email" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_locked" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_expired" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="credentials_expired" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="customer_id" type="NVARCHAR(40)">
+                <constraints nullable="true" unique="true"/>
+            </column>
+            <column name="attachment_hash" type="NVARCHAR(70)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_user_pk">
+        <addPrimaryKey columnNames="username" constraintName="user_schema_pk" tableName="user"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_role_schema">
+        <createTable tableName="role">
+            <column name="id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="NVARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_role_pk">
+        <addPrimaryKey columnNames="id" constraintName="role_pk" tableName="role"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_role_user_schema">
+        <createTable tableName="role_user">
+            <column name="user_id" type="NVARCHAR(100)">
+                <constraints nullable="false" foreignKeyName="fk_role_user_user_id" references="user(username)"/>
+            </column>
+            <column name="role_id" type="BIGINT">
+                <constraints nullable="false" foreignKeyName="fk_role_user_role_id" references="role(id)"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_role_user_pk">
+        <addPrimaryKey columnNames="user_id,role_id" constraintName="role_user_pk" tableName="role_user"/>
+    </changeSet>
+</databaseChangeLog>

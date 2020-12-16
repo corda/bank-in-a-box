@@ -1,0 +1,53 @@
+apply plugin: 'org.springframework.boot'
+
+sourceSets {
+    main {
+        resources {
+            srcDir rootProject.file("config/dev")
+        }
+    }
+}
+
+dependencies {
+    // Corda dependencies.
+    compile "$corda_release_group:corda-rpc:$corda_release_version"
+    compile "$corda_release_group:corda-jackson:$corda_release_version"
+
+
+    // CorDapp dependencies.
+    compile project(":contracts")
+    compile project(":workflows")
+
+    compile("org.springframework.boot:spring-boot-starter-websocket:$spring_boot_version") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+
+    compile("org.springframework.boot:spring-boot-starter-oauth2-client:$spring_boot_version"){
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+
+    compile "org.apache.logging.log4j:log4j-slf4j-impl:${log4j_version}"
+    compile "org.apache.logging.log4j:log4j-web:${log4j_version}"
+    compile "org.slf4j:jul-to-slf4j:$slf4j_version"
+    testCompile("org.springframework.boot:spring-boot-starter-test:$spring_boot_version") {
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+    testCompile "$corda_release_group:corda-node-driver:$corda_release_version"
+
+    compile("org.springframework.boot:spring-boot-starter-oauth2-client:$spring_boot_version"){
+        exclude group: "org.springframework.boot", module: "spring-boot-starter-logging"
+    }
+
+    compile "org.springframework.security.oauth:spring-security-oauth2:$spring_security_oauth2_version"
+    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.0.RELEASE"
+    compile "org.springframework.data:spring-data-jpa:$spring_boot_version"
+
+    compile "org.postgresql:postgresql:42.2.12"
+    compile "com.h2database:h2:1.4.200"
+}
+
+test {
+    useJUnitPlatform {
+        includeEngines = ['junit-jupiter', 'junit-vintage']
+    }
+}

@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.resourceName }}-service
+spec:
+  type: NodePort
+  selector:
+    app: {{ .Values.config.resourceName }}-frontend
+  ports:
+      - name: server-port
+        protocol: TCP
+        port: {{ .Values.webServer.conf.port }}
+        targetPort: {{ .Values.webServer.conf.port }}

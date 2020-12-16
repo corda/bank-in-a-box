@@ -1,0 +1,46 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.resourceName }}-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Values.config.resourceName }}-web-server
+  ports:
+  - name: server-port
+    protocol: TCP
+    port: {{ .Values.webServer.conf.port }}
+    targetPort: {{ .Values.webServer.conf.port }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.config.resourceName }}-deployment
+  labels:
+    app: {{ .Values.config.resourceName }}-web-server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.config.resourceName }}-web-server
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.config.resourceName }}-web-server
+    spec:
+       containers:
+       - name: {{ .Values.config.resourceName }}
+         image: {{ .Values.config.dockerImage }}
+         imagePullPolicy: Never
+         resources:
+           requests:
+             memory: "1Gi"
+             cpu: "250m"
+           limits:
+             memory: "2Gi"
+             cpu: "500m"
+         ports:
+         - containerPort: {{ .Values.webServer.conf.port }}
+         envFrom:
+           - configMapRef:
+               name: {{ .Values.config.resourceName }}-web-server-configmap

@@ -1,0 +1,127 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ .Values.config.resourceName }}-service
+spec:
+  type: LoadBalancer
+  selector:
+    app: {{ .Values.config.resourceName }}-node
+  ports:
+  - name: p2p
+    protocol: TCP
+    port: {{ .Values.corda.node.conf.p2pPort }}
+    targetPort: {{ .Values.corda.node.conf.p2pPort }}
+  - name: rpc
+    protocol: TCP
+    port: {{ .Values.corda.node.conf.rpc.port }}
+    targetPort: {{ .Values.corda.node.conf.rpc.port }}
+  {{- if .Values.corda.node.conf.ssh.enabled }}
+  - name: ssh
+    protocol: TCP
+    port: {{ .Values.corda.node.conf.ssh.sshdPort }}
+    targetPort: {{ .Values.corda.node.conf.ssh.sshdPort }}
+  {{- end }}
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.config.resourceName }}-deployment
+  labels:
+    app: {{ .Values.config.resourceName }}-node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.config.resourceName }}-node
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.config.resourceName }}-node
+    spec:
+  {{- if .Values.config.storage.awsEBS.enabled }}
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: kubernetes.io/hostname
+                operator: In
+                values:
+                - {{ .Values.config.storage.node.volumeHost }}
+  {{- end }}
+       securityContext:
+         runAsNonRoot: true
+         runAsUser: 1000
+         runAsGroup: 1000
+         fsGroup: 1000
+       volumes:
+       - name: {{ .Values.config.resourceName }}-pv
+         persistentVolumeClaim:
+           claimName: {{ .Values.config.resourceName }}-pvc
+       - name: node-config-volume
+         configMap:
+           name: {{ .Values.config.resourceName }}-corda-configmap
+       imagePullSecrets:
+       - name: container-registry-secret
+       containers:
+       - name: {{ .Values.config.resourceName }}
+         image: {{ .Values.config.dockerImage }}
+         imagePullPolicy: Never
+         resources:
+           requests:
+             memory: "1Gi"
+             cpu: "500m"
+           limits:
+             memory: "2Gi"
+             cpu: "1000m"
+         ports:
+         - containerPort: {{ .Values.corda.node.conf.p2pPort }}
+         - containerPort: {{ .Values.corda.node.conf.rpc.port }}
+{{- if .Values.corda.node.conf.ssh.enabled }}
+         - containerPort: {{ .Values.corda.node.conf.ssh.sshdPort }}
+{{- end }}
+         volumeMounts:
+         - mountPath: "/opt/corda/workspace"
+           name: {{ .Values.config.resourceName }}-pv
+         - mountPath: /etc/corda/node.conf
+           name: node-config-volume
+           subPath: node.conf
+           readOnly: true
+         - mountPath: /opt/corda/cordapps/config/bank-in-a-box-workflows-0.1.conf
+           name: node-config-volume
+           subPath: bank-in-a-box-workflows-0.1.conf
+           readOnly: true
+         - mountPath: /opt/corda/network-parameters
+           name: node-config-volume
+           subPath: network-parameters.file
+           readOnly: true
+{{- if ne .Values.config.resourceType "oracle"}}
+         - mountPath: /opt/corda/additional-node-infos/nodeInfo-6C9ECE03C7536A792EBC552904E91F8540F4C6ECCF7C1FB63821A8F30F68FAF1
+           name: node-config-volume
+           subPath: nodeInfo-6C9ECE03C7536A792EBC552904E91F8540F4C6ECCF7C1FB63821A8F30F68FAF1.file
+           readOnly: true
+{{- end }}
+{{- if ne .Values.config.resourceType "bank"}}
+         - mountPath: /opt/corda/additional-node-infos/nodeInfo-5D9023BC20666D632B1382B53A3AFF7874B1F14870BC841BFB2C70397665D126
+           name: node-config-volume
+           subPath: nodeInfo-5D9023BC20666D632B1382B53A3AFF7874B1F14870BC841BFB2C70397665D126.file
+           readOnly: true
+{{- end }}
+{{- if ne .Values.config.resourceType "notary"}}
+         - mountPath: /opt/corda/additional-node-infos/nodeInfo-8C3609861758F97F079E34D1723E1B0C08FEB81FD0B1051407875172A04CE0BA
+           name: node-config-volume
+           subPath: nodeInfo-8C3609861758F97F079E34D1723E1B0C08FEB81FD0B1051407875172A04CE0BA.file
+           readOnly: true
+{{- end }}
+         - mountPath: /opt/corda/certificates/nodekeystore.jks
+           name: node-config-volume
+           subPath: nodekeystore.jks
+           readOnly: true
+         - mountPath: /opt/corda/certificates/sslkeystore.jks
+           name: node-config-volume
+           subPath: sslkeystore.jks
+           readOnly: true
+         - mountPath: /opt/corda/certificates/truststore.jks
+           name: node-config-volume
+           subPath: truststore.jks
+           readOnly: true

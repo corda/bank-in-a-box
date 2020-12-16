@@ -1,0 +1,3 @@
+description: Corda Bank in a box web server deployment chart
+name: corda web server
+version: 0.0.1

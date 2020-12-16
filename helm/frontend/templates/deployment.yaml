@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.config.resourceName }}-deployment
+  labels:
+    app: {{ .Values.config.resourceName }}-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: {{ .Values.config.resourceName }}-frontend
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.config.resourceName }}-frontend
+    spec:
+      containers:
+        - name: {{ .Values.config.resourceName }}
+          image: {{ .Values.config.dockerImage }}
+          imagePullPolicy: Never
+          resources:
+            requests:
+              memory: "1Gi"
+              cpu: "250m"
+            limits:
+              memory: "2Gi"
+              cpu: "500m"
+          ports:
+            - containerPort: {{ .Values.webServer.conf.port }}
+          volumeMounts:
+            - mountPath: /usr/share/nginx/html/config.js
+              name: fe-config-volume
+              subPath: config.js
+              readOnly: true
+      volumes:
+        - name: fe-config-volume
+          configMap:
+            name: {{ .Values.config.resourceName }}-frontend-configmap

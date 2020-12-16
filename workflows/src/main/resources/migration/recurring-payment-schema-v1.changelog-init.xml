@@ -1,0 +1,55 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd" >
+    <changeSet author="R3.Corda" id="create_recurring_payment_schema">
+        <createTable tableName="recurring_payment">
+            <column name="transaction_id" type="NVARCHAR(64)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="output_index" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_from" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="account_to" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="currency" type="NVARCHAR(5)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date_start" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="period" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="iteration_num" type="INT">
+                <constraints nullable="true"/>
+            </column>
+            <column name="linear_id" type="NVARCHAR(40)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_recurring_payment_pk">
+        <addPrimaryKey columnNames="transaction_id,output_index" constraintName="recurring_payment_pk" tableName="recurring_payment"/>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_recurring_payment_account_from_idx">
+        <createIndex indexName="recurring_payment_account_from_idx" tableName="recurring_payment">
+            <column name="account_from"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_recurring_payment_account_to_idx">
+        <createIndex indexName="recurring_payment_account_to_idx" tableName="recurring_payment">
+            <column name="account_to"/>
+        </createIndex>
+    </changeSet>
+    <changeSet author="R3.Corda" id="create_recurring_payment_linear_id_idx">
+        <createIndex indexName="recurring_payment_linear_id_idx" tableName="recurring_payment">
+            <column name="linear_id"/>
+        </createIndex>
+    </changeSet>
+</databaseChangeLog>

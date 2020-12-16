@@ -1,0 +1,67 @@
+@import '../../styles/common.scss';
+
+.createAccountForm {
+    margin: 20px;
+    box-shadow: $common-shadow;
+    border-radius: $common-radius;
+    padding: 10px;
+    padding-bottom: 30px;
+    min-height: 600px;
+    input {
+        box-shadow: $common-shadow-light;
+    }
+}
+
+.searchResultDropdown {
+    border-radius: $common-radius;
+    padding: 10px;
+    box-shadow: $common-shadow;
+    position: absolute;
+    z-index: 10;
+    background-color: white;
+    width: 500px;
+    max-height: 400px;
+    overflow: auto;
+    font-family: Poppins;
+    font-size: 14px;
+    margin-top: -20px;
+
+    @media only screen and (max-width: 768px) {
+        max-width: 350px;
+    }
+
+    &__result {
+        border-style: solid;
+        border-width: 1px;
+        border-radius: $common-radius;
+        padding: 10px;
+        overflow: auto;
+        background-color: gray;
+
+        &__row {
+            display: flex;
+        }
+
+        &__heading {
+            font-weight: bold;
+        }
+
+        &__value {
+            color: $highlight;
+            margin-left: 5px;
+        }
+
+        &:hover {
+            background-color: $dark;
+            color: $highlight;
+            cursor: pointer;
+        }
+    }
+}
+
+.customerNameSearch {
+    padding-bottom: 0px;
+    input {
+        text-transform: none;
+    }
+}
