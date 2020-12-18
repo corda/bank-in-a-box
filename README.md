@@ -10,4 +10,4 @@ This project delivers a production ready Bank in a Box CorDapp, with accounts, t
  - Integration with external systems
  - Oracles
 
- Please refer to the Engineering Knowledge Base documentation for further information including, how to get started, a detailed description of the flows in this project and the web APIs.
+Please refer to the [Bank in a Box documentation](https://docs.corda.net/docs/apps/bankinabox/back-end-guide.html) for further information including how to get started, a detailed description of the flows in this project, and the web APIs.
